@@ -586,7 +586,18 @@ lab.experiment('lib/DocumentRenderer', () => {
         signal: [
           function (args, state) {
             state.set('head', 'Test');
-          }
+          },
+          [
+            function (args, state, output) {
+              output.success({ test: 'test' });
+            }, {
+              success: [
+                function (args, state) {
+                  state.set('test', args.test);
+                }
+              ]
+            }
+          ]
         ]
       });
 
@@ -598,7 +609,7 @@ lab.experiment('lib/DocumentRenderer', () => {
             <!DOCTYPE html>
             <html>
             <head><title>Test</title></head>
-            <body>
+            <body><script>var CATBEE_SIGNAL_CACHE = [{"name":"","args":{"signal":[null,[null,{"success":[null]}]]},"duration":0,"mutations":[{"name":"set","path":["head"],"args":["Test"]}],"isAsync":false,"outputPath":null,"isExecuting":false,"hasExecuted":true,"path":[0],"outputs":null,"actionIndex":0},[{"name":"","args":{"signal":[null,[null,{"success":[null]}]]},"output":{"test":"test"},"duration":0,"mutations":[],"isAsync":true,"outputPath":"success","isExecuting":false,"hasExecuted":true,"path":[1,0],"outputs":{"success":[{"name":"","args":{"signal":[null,[null,{"success":[null]}]],"test":"test"},"duration":0,"mutations":[{"name":"set","path":["test"],"args":["test"]}],"isAsync":false,"outputPath":null,"isExecuting":false,"hasExecuted":true,"path":[1,0,"outputs","success",0],"outputs":null,"actionIndex":2}]},"actionIndex":1}]];</script>
             document – document
             <cat-empty>empty - empty</cat-empty>
             </body>

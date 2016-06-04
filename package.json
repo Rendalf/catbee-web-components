@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint lib/* browser/*",
-    "test": "lab -l"
+    "test": "lab -l --timeout 300"
   },
   "repository": {
     "type": "git",
