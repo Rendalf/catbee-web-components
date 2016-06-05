@@ -61,7 +61,6 @@ class DocumentRenderer {
       .then(() => {
         this._currentRoutingContext = routingContext;
         this._state = new State(this._locator);
-        this._history = global.CATBEE_SIGNAL_CACHE;
 
         var signal = routingContext.args.signal;
 
@@ -69,7 +68,7 @@ class DocumentRenderer {
           return;
         }
 
-        return this._state.signal(signal, routingContext, routingContext.args, this._history)
+        return this._state.signal(signal, routingContext, routingContext.args, global.CATBEE_SIGNAL_CACHE)
           .then(() => this._state.tree.commit()); // Tree should clear the updates queue;;
       })
       .then(() => {
