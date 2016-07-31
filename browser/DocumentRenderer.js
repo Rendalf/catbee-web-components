@@ -6,6 +6,7 @@ const moduleHelper = require('../lib/helpers/moduleHelper');
 const uuid = require('uuid');
 const LocalContextProvider = require('../lib/LocalContextProvider');
 const StateManager = require('../lib/StateManager');
+const unescape = require('lodash.escape');
 
 const ERROR_MISSED_REQUIRED_COMPONENTS = 'Document component is not register.';
 
@@ -95,7 +96,7 @@ class DocumentRenderer {
           return;
         }
 
-        return this._stateManager.signal(signal, args, this._window.CATBEE_CACHE);
+        return this._stateManager.signal(signal, args, this._getHydrationCache());
       })
       .then(() => {
         this._stateManager.tree.commit();
@@ -104,6 +105,24 @@ class DocumentRenderer {
         return this._traverseComponentsWithContext([documentElement], action, document);
       })
       .catch((e) => this._eventBus.emit('error', e));
+  }
+
+  /**
+   * Returns cache of async actions given from server
+   * @returns {*}
+   */
+  _getHydrationCache () {
+    if (!this._window.CATBEE_CACHE) {
+      return {};
+    }
+
+    return JSON.parse(this._window.CATBEE_CACHE, (key, value) => {
+      if (typeof value === 'string') {
+        return unescape(value);
+      }
+
+      return value;
+    });
   }
 
   /**

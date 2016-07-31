@@ -155,6 +155,82 @@ lab.experiment('browser/DocumentRenderer', () => {
       });
     });
 
+    lab.test('Should parse and unescape CATBEE_CACHE', (done) => {
+      const locator = createLocator();
+      const eventBus = locator.resolve('eventBus');
+
+      class Empty {
+        template () {
+          return ``;
+        }
+
+        bind () {
+          this.$context.getWatcherData()
+            .then(data => assert
+              .deepEqual({ text: 'Test' }, data))
+            .then(() => done())
+            .catch(done);
+        }
+      }
+
+      class Document {
+      }
+
+      const empty = {
+        constructor: Empty
+      };
+
+      const document = {
+        constructor: Document,
+        children: [
+          {
+            name: 'empty',
+            component: empty,
+            watcher: {
+              text: ['text']
+            }
+          }
+        ]
+      };
+
+      const html = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+      </head>
+      <body>
+      <cat-empty></cat-empty>
+      </body>
+      </html>
+      `;
+
+      eventBus.on('error', done);
+      jsdom.env({
+        html: html,
+        done: function (errors, window) {
+
+          window.CATBEE_CACHE = '[[{\"outputPath\":[1,0],\"path\":\"success\",\"args\":{\"test\":\"&lt;/script&gt;\"}}]]';
+
+          locator.registerInstance('window', window);
+
+          const renderer = new DocumentRenderer(locator);
+          locator.registerInstance('documentComponent', document);
+
+          renderer.initWithState({
+            args: {
+              signal: [
+                function (args, state) {
+                  state.set('text', 'Test');
+                }
+              ]
+            }
+          })
+            .then(() => console.info('inited'))
+            .catch(done);
+        }
+      });
+    });
+
     lab.test('Should take parent props by parentPropsMap option', (done) => {
       const locator = createLocator();
       const eventBus = locator.resolve('eventBus');

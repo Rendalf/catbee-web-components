@@ -952,7 +952,7 @@ lab.experiment('lib/DocumentRenderer', () => {
             <!DOCTYPE html>
             <html>
             <head><title>Test</title></head>
-            <body><script>var CATBEE_CACHE = []</script>
+            <body><script>var CATBEE_CACHE = '[]';</script>
             document – document
             <cat-empty>empty - empty</cat-empty>
             </body>
@@ -967,7 +967,7 @@ lab.experiment('lib/DocumentRenderer', () => {
         });
     });
 
-    lab.test('Should render inline script with async actions results', (done) => {
+    lab.test('Should render inline script with escaped async actions results', (done) => {
       class Document {
         template (context) {
           return `
@@ -1056,7 +1056,7 @@ lab.experiment('lib/DocumentRenderer', () => {
             <!DOCTYPE html>
             <html>
             <head><title>Test</title></head>
-            <body><script>var CATBEE_CACHE = [{"outputPath":[1,0],"path":"success","args":{"test":"test"}}]</script>
+            <body><script>var CATBEE_CACHE = '[{\"outputPath\":[1,0],\"path\":\"success\",\"args\":{\"test\":\"test\"}}]';</script>
             document – document
             <cat-empty>empty - empty</cat-empty>
             </body>
